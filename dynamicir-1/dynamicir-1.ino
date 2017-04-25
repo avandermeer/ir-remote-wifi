@@ -1,18 +1,36 @@
 
 #include <IRremoteESP8266.h>
 #include "ESP8266WiFi.h"
-#include <ESP8266mDNS.h>
+//#include <ESP8266mDNS.h>
 #include <WiFiClient.h>
-#include <EEPROM.h>
-#include <WiFiClientSecure.h>
+//#include <EEPROM.h>
+//#include <WiFiClientSecure.h>
+#include <PubSubClient.h>
 
+/**
+   WIFI CONFIG
+*/
 const char* ssid     = "Lacus@Vossius";
 const char* password = "Voss2014";
+WiFiClient ESPclient;
 
 
-WiFiServer server(80);
-
+/**
+   IRSEND CONFIG
+*/
 IRsend irsend(16); //an IR led is connected to GPIO pin 4 (D2)
+
+/**
+   MQTT CONFIG
+*/
+
+#define MQTT_SERVER      "m21.cloudmqtt.com"
+#define MQTT_PORT        11061                  
+#define MQTT_USERNAME    "neddnhct"
+#define MQTT_PWD         "fzxj_5M8ss6c"
+
+PubSubClient client(ESPclient);
+
 
 void setup()
 {
@@ -40,111 +58,25 @@ void setup()
   Serial.println("");
   Serial.println("WiFi connected");
 
-  // Start the server
-  server.begin();
-  Serial.println("Server started");
+
 
   // Print the IP address
-  Serial.print("Use this URL to connect: ");
-  Serial.print("http://");
+  Serial.print("IP address: ");
   Serial.print(WiFi.localIP());
   Serial.println("/");
 
+
+setup_wifi();
+  client.setServer(MQTT_SERVER, MQTT_PORT);
+
+
 }
 
+uint32_t x=0;
+
 void loop() {
-  // Check if a client has connected
-  WiFiClient client = server.available();
-  if (!client) {
-    return;
-  }
-
-  // Wait until the client sends some data
-  Serial.println("new client");
-  while (!client.available()) {
-    delay(1);
-  }
-
-  // Read the first line of the request
-  String request = client.readStringUntil('\r');
-  Serial.println(request);
-  client.flush();
-
-  // Match the request
-
-  if (request.indexOf("/POWER") != -1) {
-    //POWER:
-    unsigned int  rawData1[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400}; // UNKNOWN 1BD7
-    unsigned int  rawData2[10] = {750, 350, 1800, 350, 750, 350, 750, 350, 750, 350 };
-    Serial.println((sizeof(rawData1) / sizeof(unsigned int)));
-    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
-  }
-  if (request.indexOf("/VOLUP") != -1) {
-    //    //VOL UP:
-    //    unsigned int  rawData1[31] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1AC8
-    //    unsigned int  rawData2[17] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN B9AB2517
-
-    unsigned int  rawData1[19] = {350, 1800, 350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN CBF358E
-    unsigned int  rawData2[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 700, 400, 1750, 400, 700, 400, 700, 400, 700, 400}; // UNKNOWN 1AC8
-
-    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
-  }
-
-  if (request.indexOf("/VOLDOWN") != -1) {
-    //VOL DOWN:
-
-// unsigned int  rawData2[20] = {1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1850, 350, 1850, 350, 1850, 350 }; // UNKNOWN 7DB6C60B
-   unsigned int  rawData1[21] = {300,1850, 300,1850, 300,800, 300,800, 300,1850, 300,1850, 300,800, 300,1850, 300,1850, 300,1850, 300};  // UNKNOWN C8653188
 
 
-    unsigned int  rawData2[31] = {300, 800, 300, 800, 300, 1850, 300, 1850, 300, 800, 300, 800, 300, 800, 300, 1850, 300, 1850, 300, 800, 300, 800, 300, 1850, 300, 800, 300, 800, 350, 750, 300}; // UNKNOWN 18C8
-   
-
-
-
-    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
-
-  }
-
-  if (request.indexOf("/CD") != -1) {
-   unsigned int  rawData1[19] = {300, 800, 300, 1850, 300, 800, 300, 800, 300, 1850, 300, 800, 300, 1850, 300, 1850, 300, 1850, 300}; // UNKNOWN 88FD3857
-
-    unsigned int  rawData2[31] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1968
- 
-    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
-
-  }
-
-  if (request.indexOf("/AUX") != -1) {
-    unsigned int  rawData1[31] = {300, 800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1B68
-    unsigned int  rawData2[17] = {350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN 25ACFAD8
-
-
-    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
-
-  }
-
-
-
-  // Set ledPin according to the request
-  //digitalWrite(ledPin, value);
-
-
-  // Return the response
-  client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html");
-  client.println(""); //  do not forget this one
-  client.println("<!DOCTYPE HTML>");
-  client.println("<html>");
-
-  client.print("done ");
-
-
-  client.println("</html>");
-
-  delay(1);
-  Serial.println("Client disonnected");
-  Serial.println("");
 
 }
 
@@ -162,14 +94,7 @@ bool doDenon(unsigned int rawData1[], unsigned int rawData2[], int size1, int si
     irsend.sendRaw(rawData2, size2, 38);
     delay(64);
   }
-  //  for (int i = 0; i < 3; i++) {
-  //  unsigned int  rawData1[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400}; // UNKNOWN 1BD7
-  //    irsend.sendRaw(rawData1, 31, 38);
-  //    delay(75);
-  //    unsigned int  rawData2[10] = {750, 350, 1800, 350, 750, 350, 750, 350, 750, 350 };
-  //    irsend.sendRaw(rawData2, 10, 38);
-  //    delay(64);
-  //  }
+
 
   return true;
 }
