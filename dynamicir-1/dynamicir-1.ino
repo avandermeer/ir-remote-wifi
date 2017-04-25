@@ -76,21 +76,51 @@ void loop() {
     //POWER:
     unsigned int  rawData1[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400}; // UNKNOWN 1BD7
     unsigned int  rawData2[10] = {750, 350, 1800, 350, 750, 350, 750, 350, 750, 350 };
-Serial.println((sizeof(rawData1)/sizeof(unsigned int)));
-    doDenon(rawData1, rawData2, sizeof(rawData1)/sizeof(unsigned int), sizeof(rawData2)/sizeof(unsigned int));
+    Serial.println((sizeof(rawData1) / sizeof(unsigned int)));
+    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
   }
   if (request.indexOf("/VOLUP") != -1) {
-    //VOL UP:
-    unsigned int  rawData1[31] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1AC8
-    unsigned int  rawData2[17] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN B9AB2517
-doDenon(rawData1, rawData2, sizeof(rawData1)/sizeof(unsigned int), sizeof(rawData2)/sizeof(unsigned int));
+    //    //VOL UP:
+    //    unsigned int  rawData1[31] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1AC8
+    //    unsigned int  rawData2[17] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN B9AB2517
+
+    unsigned int  rawData1[19] = {350, 1800, 350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN CBF358E
+    unsigned int  rawData2[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 700, 400, 1750, 400, 700, 400, 700, 400, 700, 400}; // UNKNOWN 1AC8
+
+    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
   }
 
   if (request.indexOf("/VOLDOWN") != -1) {
     //VOL DOWN:
-    unsigned int  rawData1[31] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 18C8
-    unsigned int  rawData2[19] = {350, 1800, 350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN CBF358E
-doDenon(rawData1, rawData2, sizeof(rawData1)/sizeof(unsigned int), sizeof(rawData2)/sizeof(unsigned int));
+
+// unsigned int  rawData2[20] = {1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1850, 350, 1850, 350, 1850, 350 }; // UNKNOWN 7DB6C60B
+   unsigned int  rawData1[21] = {300,1850, 300,1850, 300,800, 300,800, 300,1850, 300,1850, 300,800, 300,1850, 300,1850, 300,1850, 300};  // UNKNOWN C8653188
+
+
+    unsigned int  rawData2[31] = {300, 800, 300, 800, 300, 1850, 300, 1850, 300, 800, 300, 800, 300, 800, 300, 1850, 300, 1850, 300, 800, 300, 800, 300, 1850, 300, 800, 300, 800, 350, 750, 300}; // UNKNOWN 18C8
+   
+
+
+
+    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
+
+  }
+
+  if (request.indexOf("/CD") != -1) {
+   unsigned int  rawData1[19] = {300, 800, 300, 1850, 300, 800, 300, 800, 300, 1850, 300, 800, 300, 1850, 300, 1850, 300, 1850, 300}; // UNKNOWN 88FD3857
+
+    unsigned int  rawData2[31] = {350, 750, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1968
+ 
+    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
+
+  }
+
+  if (request.indexOf("/AUX") != -1) {
+    unsigned int  rawData1[31] = {300, 800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 750, 350, 1800, 350, 750, 350, 750, 350, 750, 350}; // UNKNOWN 1B68
+    unsigned int  rawData2[17] = {350, 1800, 350, 750, 350, 750, 350, 1800, 350, 750, 350, 1800, 350, 1800, 350, 1800, 350}; // UNKNOWN 25ACFAD8
+
+
+    doDenon(rawData1, rawData2, sizeof(rawData1) / sizeof(unsigned int), sizeof(rawData2) / sizeof(unsigned int));
 
   }
 
@@ -120,26 +150,26 @@ doDenon(rawData1, rawData2, sizeof(rawData1)/sizeof(unsigned int), sizeof(rawDat
 
 bool doDenon(unsigned int rawData1[], unsigned int rawData2[], int size1, int size2) {
   Serial.println("do denon...");
-//  Serial.println(rawData1);
-Serial.println(size1);
-Serial.println(size2);
+  //  Serial.println(rawData1);
+  Serial.println(size1);
+  Serial.println(size2);
 
-  for (int i = 0; i < 3; i++) {
-//    Serial.println(sizeof(rawData1).toStr());
+  for (int i = 0; i < 2; i++) {
+    //    Serial.println(sizeof(rawData1).toStr());
     irsend.sendRaw(rawData1, size1, 38);
     delay(75);
     Serial.println("2");
     irsend.sendRaw(rawData2, size2, 38);
     delay(64);
   }
-//  for (int i = 0; i < 3; i++) {
-//  unsigned int  rawData1[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400}; // UNKNOWN 1BD7
-//    irsend.sendRaw(rawData1, 31, 38);
-//    delay(75);
-//    unsigned int  rawData2[10] = {750, 350, 1800, 350, 750, 350, 750, 350, 750, 350 };
-//    irsend.sendRaw(rawData2, 10, 38);
-//    delay(64);
-//  }
+  //  for (int i = 0; i < 3; i++) {
+  //  unsigned int  rawData1[31] = {400, 700, 400, 700, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400, 1750, 400, 700, 400, 1750, 400, 700, 400, 1750, 400, 1750, 400, 1750, 400}; // UNKNOWN 1BD7
+  //    irsend.sendRaw(rawData1, 31, 38);
+  //    delay(75);
+  //    unsigned int  rawData2[10] = {750, 350, 1800, 350, 750, 350, 750, 350, 750, 350 };
+  //    irsend.sendRaw(rawData2, 10, 38);
+  //    delay(64);
+  //  }
 
   return true;
 }
